@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using NTierArchitecture.Business.Features.Categories.UpdateCategory;
 using NTierArchitecture.Entities.Models;
 
@@ -6,11 +7,12 @@ internal sealed class UpdateCategoryCommandHandler : IRequestHandler<UpdateCateg
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
-
-    public UpdateCategoryCommandHandler(ICategoryRepository categoryRepository,IUnitOfWork unitOfWork)
+    private readonly IMapper _mapper;
+    public UpdateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _categoryRepository = categoryRepository;   
+        _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
@@ -30,7 +32,10 @@ internal sealed class UpdateCategoryCommandHandler : IRequestHandler<UpdateCateg
             }
         }
 
-        category.Name= request.Name;
+        //category.Name= request.Name;
+
+        _mapper.Map(request, category);//requesti set eder categoryde değişmeyenleri aynı şekilde bırakır.
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 

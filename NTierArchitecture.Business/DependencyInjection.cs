@@ -14,6 +14,8 @@ namespace NTierArchitecture.Business
 
             services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
+            services.AddAutoMapper(typeof(DependencyInjection).Assembly);
+
             return services;
         }
 
