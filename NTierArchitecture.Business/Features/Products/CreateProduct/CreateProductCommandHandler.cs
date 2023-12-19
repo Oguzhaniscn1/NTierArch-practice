@@ -1,34 +1,36 @@
 ﻿using AutoMapper;
 using MediatR;
-using NTierArchitecture.Business.Features.Products.CreateProduct;
 using NTierArchitecture.Entities.Models;
 
-internal sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand>
+namespace NTierArchitecture.Business.Features.Products.CreateProduct
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-
-    public CreateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper)
+    internal sealed class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Unit>
     {
-        _unitOfWork = unitOfWork;
-        _productRepository = productRepository;
-        _mapper = mapper;
-    }
+        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-    public async Task Handle(CreateProductCommand request, CancellationToken cancellationToken)
-    {
-        bool isProductNameExist = await _productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
-        if (isProductNameExist)
+        public CreateProductCommandHandler(IUnitOfWork unitOfWork, IProductRepository productRepository, IMapper mapper)
         {
-            throw new ArgumentException("bu ürün adı daha önce kullanılmış");
+            _unitOfWork = unitOfWork;
+            _productRepository = productRepository;
+            _mapper = mapper;
         }
 
-        Product product =_mapper.Map<Product>(request);
+        public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        {
+            bool isProductNameExist = await _productRepository.AnyAsync(p => p.Name == request.Name, cancellationToken);
+            if (isProductNameExist)
+            {
+                throw new ArgumentException("bu ürün adı daha önce kullanılmış");
+            }
 
-        await _productRepository.AddAsync(product, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            Product product = _mapper.Map<Product>(request);
 
+            await _productRepository.AddAsync(product, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            return Unit.Value;
+        }
     }
 }

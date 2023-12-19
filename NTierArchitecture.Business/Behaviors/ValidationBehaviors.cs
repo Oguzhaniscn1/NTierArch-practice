@@ -5,7 +5,7 @@ using MediatR;
 namespace NTierArchitecture.Business.Behaviors
 {
     public sealed class ValidationBehaviors<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : class, IRequest<TResponse>, IRequest
+        where TRequest : class, IRequest<TResponse>
     {
 
         private readonly IEnumerable<IValidator<TRequest>> _validator;

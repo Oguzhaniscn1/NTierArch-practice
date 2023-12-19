@@ -3,4 +3,4 @@ using NTierArchitecture.Entities.Models;
 
 namespace NTierArchitecture.Business.Features.Categories.GetCategories;
 
-public sealed record GetCategories():IRequest<List<Category>>;
+public sealed record GetCategoriesCommand():IRequest<List<Category>>;
