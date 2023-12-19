@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scrutor;
 
 namespace NTierArchitecture.DataAccess
 {
@@ -28,9 +29,14 @@ namespace NTierArchitecture.DataAccess
 
             services.AddScoped<IUnitOfWork>(sv => sv.GetRequiredService<ApplicationDbContext>());
 
-            services.AddScoped<ICategoryRepository, CategoryRespository>();
-            services.AddScoped<IProductRepository, ProductRespository>();
-            services.AddScoped<IUserRoleRepository, UserRoleRespository>();
+            services.Scan(Selector => Selector
+            .FromAssemblies(
+                typeof(DependencyInjection).Assembly)
+            .AddClasses(publicOnly:false)
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsMatchingInterface()
+            .WithScopedLifetime()
+            );
 
             return services;
         }

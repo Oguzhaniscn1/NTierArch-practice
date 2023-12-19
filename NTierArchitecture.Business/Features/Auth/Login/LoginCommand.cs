@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace NTierArchitecture.Business.Features.Auth.Login
 {
-    public sealed record LoginCommand(string UserNameorEmail,string Password):IRequest<Unit>;
+    public sealed record LoginCommand(string UserNameorEmail,string Password):IRequest<LoginCommandResponse>;
     
 }
