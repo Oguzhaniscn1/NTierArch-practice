@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NTierArchitecture.Entities.Models;
+using NTierArchitecture.Entities.Repositories;
 
 namespace NTierArchitecture.Business.Features.Products.RemoveProductsById;
 
